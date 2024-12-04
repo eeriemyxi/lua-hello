@@ -56,7 +56,7 @@ end
 
 CC=$LINCC lua $LUASTATIC main.lua build/linux/include/liblua.a \
     -Ibuild/linux/include/ \
-    -o build/linux/bin/$PROGRAM
+    -o build/linux/bin/$PROGRAM.bin
 
 CC=$WINCC lua $LUASTATIC main.lua build/windows/include/liblua.a \
     -Ibuild/windows/include/ \
