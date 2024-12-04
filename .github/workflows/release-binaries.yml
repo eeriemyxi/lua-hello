@@ -1,7 +1,7 @@
 on:
-    push:
-        tags:
-            - "v*"
+  push:
+    tags:
+      - "v*"
 name: Upload Binaries to Release
 jobs:
     build:
@@ -14,13 +14,18 @@ jobs:
               with:
                 fetch-depth: 0
 
-            - name: Set up MinGW
+            - name: Setup MinGW Compiler
               uses: egor-tensin/setup-mingw@v2
               with:
                 platform: x64
 
             - name: Setup Fish Shell
               uses: fish-actions/install-fish@v1.1.0
+              
+            - name: Setup Lua Runtime
+            - uses: leafo/gh-actions-lua@v10
+              with:
+               luaVersion: "5.1.5"
 
             - name: Generate Release Notes
               env:
