@@ -23,7 +23,7 @@ jobs:
               uses: fish-actions/install-fish@v1.1.0
               
             - name: Setup Lua Runtime
-            - uses: leafo/gh-actions-lua@v10
+              uses: leafo/gh-actions-lua@v10
               with:
                luaVersion: "5.1.5"
 
