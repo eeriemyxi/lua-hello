@@ -1,10 +1,11 @@
 #!/bin/fish
-set SOURCE $(pwd)
-set PROGRAM "main"
+set SOURCE $(status dirname)
+set PROGRAM "hello"
 
-set LUASTATIC build/lua/luastatic.lua
+set LUASTATIC $SOURCE/build/lua/luastatic.lua
 set LUASTATIC_VERSION "0.0.12"
 
+set LUA "/usr/bin/lua"
 set LUA_VERSION "5.4.7"
 
 set CORES $(nproc)
@@ -27,39 +28,39 @@ if set -q _flag_clean
 end
 
 # Setup
-mkdir build/{lua,windows,linux} -p
-mkdir build/lua/{luawin,lualin} -p
-mkdir build/{windows,linux}/{include,bin} -p
+mkdir $SOURCE/build/{lua,windows,linux} -p
+mkdir $SOURCE/build/lua/{luawin,lualin} -p
+mkdir $SOURCE/build/{windows,linux}/{include,bin} -p
 
-if not test -f build/lua/lua-$LUA_VERSION.tar.gz
-    wget https://www.lua.org/ftp/lua-$LUA_VERSION.tar.gz --directory-prefix build/lua
-    tar xf build/lua/lua-$LUA_VERSION.tar.gz --directory=build/lua/luawin
-    tar xf build/lua/lua-$LUA_VERSION.tar.gz --directory=build/lua/lualin
+if not test -f $SOURCE/build/lua/lua-$LUA_VERSION.tar.gz
+    wget https://www.lua.org/ftp/lua-$LUA_VERSION.tar.gz --directory-prefix $SOURCE/build/lua
+    tar xf $SOURCE/build/lua/lua-$LUA_VERSION.tar.gz --directory=$SOURCE/build/lua/luawin
+    tar xf $SOURCE/build/lua/lua-$LUA_VERSION.tar.gz --directory=$SOURCE/build/lua/lualin
 end
 
 # Linux
-cd $SOURCE/build/lua/lualin/lua-$LUA_VERSION
-make PLAT=linux -j$CORES
-cp src/* $SOURCE/build/linux/include/
+set -l LIN_LUA_PATH $SOURCE/build/lua/lualin/lua-$LUA_VERSION
+make -C $LIN_LUA_PATH PLAT=linux -j$CORES
+cp $LIN_LUA_PATH/src/* $SOURCE/build/linux/include/
 
 # Windows
-cd $SOURCE/build/lua/luawin/lua-$LUA_VERSION
-make PLAT=mingw CC=x86_64-w64-mingw32-gcc -j$CORES
-cp src/* $SOURCE/build/windows/include/
+set -l WIN_LUA_PATH $SOURCE/build/lua/luawin/lua-$LUA_VERSION
+make -C $WIN_LUA_PATH PLAT=mingw CC=x86_64-w64-mingw32-gcc -j$CORES
+cp $WIN_LUA_PATH/src/* $SOURCE/build/windows/include/
 
-cd $SOURCE
-
-if not test -f build/lua/luastatic.lua
+if not test -f $SOURCE/build/lua/luastatic.lua
     wget "https://raw.githubusercontent.com/ers35/luastatic/refs/tags/$LUASTATIC_VERSION/luastatic.lua" \
-        --directory-prefix build/lua
+        --directory-prefix $SOURCE/build/lua
 end
 
-CC=$LINCC lua $LUASTATIC main.lua build/linux/include/liblua.a \
-    -Ibuild/linux/include/ \
-    -o build/linux/bin/$PROGRAM.bin
+CC=$LINCC $LUA $LUASTATIC $SOURCE/main.lua $SOURCE/build/linux/include/liblua.a \
+    -I$SOURCE/build/linux/include/ \
+    -o$SOURCE/build/linux/bin/$PROGRAM.bin \
+    -static
 
-CC=$WINCC lua $LUASTATIC main.lua build/windows/include/liblua.a \
-    -Ibuild/windows/include/ \
-    -o build/windows/bin/$PROGRAM.exe
+CC=$WINCC $LUA $LUASTATIC $SOURCE/main.lua $SOURCE/build/windows/include/liblua.a \
+    -I$SOURCE/build/windows/include/ \
+    -o$SOURCE/build/windows/bin/$PROGRAM.exe \
+    -static
 
-rm $PROGRAM.luastatic.c
+rm *.luastatic.c
