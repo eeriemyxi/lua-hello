@@ -25,6 +25,11 @@ jobs:
             - name: Install ARM64 GNU Compiler
               run: sudo apt install gcc-aarch64-linux-gnu -y
 
+            - name: Setup Android NDK
+            - uses: nttld/setup-ndk@v1
+              with:
+                ndk-version: r28d
+
             - name: Setup Fish Shell
               uses: fish-actions/install-fish@v1.1.0
               
@@ -53,4 +58,5 @@ jobs:
                       build/linux/bin/*.bin
                       build/linux-arm32/bin/*.bin
                       build/linux-arm64/bin/*.bin
+                      build/linux-android-arm64/bin/*.bin
                       build/windows/bin/*.exe
