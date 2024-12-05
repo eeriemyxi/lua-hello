@@ -5,7 +5,7 @@ set PROGRAM "hello"
 set LUASTATIC $SOURCE/build/lua/luastatic.lua
 set LUASTATIC_VERSION "0.0.12"
 
-set LUA "/usr/bin/lua"
+set LUA "lua"
 set LUA_VERSION "5.4.7"
 
 set CORES $(nproc)
