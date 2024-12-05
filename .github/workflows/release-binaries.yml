@@ -28,7 +28,7 @@ jobs:
             - name: Setup Android NDK
               uses: nttld/setup-ndk@v1
               with:
-                ndk-version: r28d
+                ndk-version: r28-beta2
 
             - name: Setup Fish Shell
               uses: fish-actions/install-fish@v1.1.0
