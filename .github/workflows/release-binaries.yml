@@ -26,6 +26,7 @@ jobs:
               run: sudo apt install gcc-aarch64-linux-gnu -y
 
             - name: Setup Android NDK
+              id: setup-ndk
               uses: nttld/setup-ndk@v1
               with:
                 ndk-version: r28-beta2
@@ -48,7 +49,11 @@ jobs:
                   cat RELEASE-NOTES.md
 
             - name: Build Binaries
-              run: chmod +x build.fish && ./build.fish
+              run: |
+                export PATH=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64:$PATH
+                chmod +x build.fish && ./build.fish
+              env:
+                ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
 
             - name: Upload Binaries to Release
               uses: softprops/action-gh-release@v2
