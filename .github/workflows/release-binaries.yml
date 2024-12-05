@@ -14,6 +14,13 @@ jobs:
               with:
                 fetch-depth: 0
 
+            - name: "Setup Python Environment"
+              uses: actions/setup-python@v5
+              with:
+                python-version: '3.10.12'
+                cache: 'pip'
+              run: pip install xonsh
+
             - name: Setup MinGW Compiler
               uses: egor-tensin/setup-mingw@v2
               with:
@@ -31,9 +38,6 @@ jobs:
               with:
                 ndk-version: r28-beta2
 
-            - name: Setup Fish Shell
-              uses: fish-actions/install-fish@v1.1.0
-              
             - name: Setup Lua Runtime
               run: sudo apt install lua5.1 -y
 
@@ -51,7 +55,7 @@ jobs:
             - name: Build Binaries
               run: |
                 export PATH=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH
-                chmod +x build.fish && ./build.fish
+                chmod +x build.xsh && xonsh build.xsh
               env:
                 ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
 
