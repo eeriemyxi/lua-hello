@@ -21,16 +21,14 @@ parser.add_argument('-c', '--continue', action='store_true', help="Don't exit af
 args = parser.parse_args()
 
 Builder = (
-    namedtuple('Builder', 
-               ['build_name', 'lua_dir', 'cc', 'platform', "suffix", "cflags"], 
-               defaults=[None] * 4 + [""]))
+    namedtuple('Builder', ['build_name', 'lua_dir', 'cc', 'platform', "suffix", "cflags"]))
 
 BUILD_PROCS = [
-    Builder("linux", "lualin", "gcc", "linux", "bin"),
+    Builder("linux", "lualin", "gcc", "linux", "bin", ""),
     Builder("linux-arm32", "lualina32", "arm-linux-gnueabi-gcc", "linux", "bin", "-march=armv7-a"),
-    Builder("linux-arm64", "lualina64", "aarch64-linux-gnu-gcc", "linux", "bin"),
-    Builder("linux-android-arm64", "lualinan64", "aarch64-linux-android35-clang", "linux", "bin"),
-    Builder("windows", "luawin", "x86_64-w64-mingw32-gcc", "mingw", "exe"),
+    Builder("linux-arm64", "lualina64", "aarch64-linux-gnu-gcc", "linux", "bin", ""),
+    Builder("linux-android-arm64", "lualinan64", "aarch64-linux-android35-clang", "linux", "bin", ""),
+    Builder("windows", "luawin", "x86_64-w64-mingw32-gcc", "mingw", "exe", ""),
 ]
 
 if args.clean:
