@@ -19,8 +19,11 @@ jobs:
               with:
                 platform: x64
 
-            - name: Install Arm GNU Toolchain
+            - name: Install ARM32 GNU Compiler
               run: sudo apt install gcc-arm-linux-gnueabi -y
+
+            - name: Install ARM64 GNU Compiler
+              run: sudo apt install gcc-aarch64-linux-gnu -y
 
             - name: Setup Fish Shell
               uses: fish-actions/install-fish@v1.1.0
@@ -49,4 +52,5 @@ jobs:
                   files: |
                       build/linux/bin/*.bin
                       build/linux-arm32/bin/*.bin
+                      build/linux-arm64/bin/*.bin
                       build/windows/bin/*.exe
