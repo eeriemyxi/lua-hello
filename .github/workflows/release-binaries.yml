@@ -21,8 +21,6 @@ jobs:
 
             - name: Install Arm GNU Toolchain
               uses: carlosperate/arm-none-eabi-gcc-action@v1
-              with:
-                release: "11.4.0"
 
             - name: Setup Fish Shell
               uses: fish-actions/install-fish@v1.1.0
