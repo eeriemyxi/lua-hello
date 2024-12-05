@@ -53,12 +53,12 @@ if not test -f $SOURCE/build/lua/luastatic.lua
         --directory-prefix $SOURCE/build/lua
 end
 
-CC=$LINCC $LUA $LUASTATIC $SOURCE/main.lua $SOURCE/build/linux/include/liblua.a \
+CC=$LINCC $LUA $LUASTATIC $SOURCE/main.lua $SOURCE/ext/*.lua $SOURCE/build/linux/include/liblua.a \
     -I$SOURCE/build/linux/include/ \
     -o$SOURCE/build/linux/bin/$PROGRAM.bin \
     -static
 
-CC=$WINCC $LUA $LUASTATIC $SOURCE/main.lua $SOURCE/build/windows/include/liblua.a \
+CC=$WINCC $LUA $LUASTATIC $SOURCE/main.lua $SOURCE/ext/*.lua $SOURCE/build/windows/include/liblua.a \
     -I$SOURCE/build/windows/include/ \
     -o$SOURCE/build/windows/bin/$PROGRAM.exe \
     -static
