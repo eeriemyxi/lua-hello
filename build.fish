@@ -10,6 +10,7 @@ set LUA_VERSION "5.4.7"
 
 set CORES $(nproc)
 set LINCC "gcc"
+set LINACC "arm-linux-gnueabi-gcc"
 set WINCC "x86_64-w64-mingw32-gcc"
 
 argparse 'h/help' 'c/clean' -- $argv
@@ -28,24 +29,30 @@ if set -q _flag_clean
 end
 
 # Setup
-mkdir $SOURCE/build/{lua,windows,linux} -p
-mkdir $SOURCE/build/lua/{luawin,lualin} -p
-mkdir $SOURCE/build/{windows,linux}/{include,bin} -p
+mkdir $SOURCE/build/{lua,windows,linux,linux-arm32} -p
+mkdir $SOURCE/build/lua/{luawin,lualin,lualina32} -p
+mkdir $SOURCE/build/{windows,linux,linux-arm32}/{include,bin} -p
 
 if not test -f $SOURCE/build/lua/lua-$LUA_VERSION.tar.gz
     wget https://www.lua.org/ftp/lua-$LUA_VERSION.tar.gz --directory-prefix $SOURCE/build/lua
     tar xf $SOURCE/build/lua/lua-$LUA_VERSION.tar.gz --directory=$SOURCE/build/lua/luawin
     tar xf $SOURCE/build/lua/lua-$LUA_VERSION.tar.gz --directory=$SOURCE/build/lua/lualin
+    tar xf $SOURCE/build/lua/lua-$LUA_VERSION.tar.gz --directory=$SOURCE/build/lua/lualina32
 end
 
 # Linux
 set -l LIN_LUA_PATH $SOURCE/build/lua/lualin/lua-$LUA_VERSION
-make -C $LIN_LUA_PATH PLAT=linux -j$CORES
+make -C $LIN_LUA_PATH PLAT=linux CC=$LINCC -j$CORES
 cp $LIN_LUA_PATH/src/* $SOURCE/build/linux/include/
+
+# Linux ARM32
+set -l LIN_LUA_PATH $SOURCE/build/lua/lualina32/lua-$LUA_VERSION
+make -C $LIN_LUA_PATH PLAT=linux CC=$LINACC -j$CORES
+cp $LIN_LUA_PATH/src/* $SOURCE/build/linux-arm32/include/
 
 # Windows
 set -l WIN_LUA_PATH $SOURCE/build/lua/luawin/lua-$LUA_VERSION
-make -C $WIN_LUA_PATH PLAT=mingw CC=x86_64-w64-mingw32-gcc -j$CORES
+make -C $WIN_LUA_PATH PLAT=mingw CC=$WINCC -j$CORES
 cp $WIN_LUA_PATH/src/* $SOURCE/build/windows/include/
 
 if not test -f $SOURCE/build/lua/luastatic.lua
@@ -55,12 +62,18 @@ end
 
 CC=$LINCC $LUA $LUASTATIC $SOURCE/main.lua $SOURCE/ext/*.lua $SOURCE/build/linux/include/liblua.a \
     -I$SOURCE/build/linux/include/ \
-    -o$SOURCE/build/linux/bin/$PROGRAM.bin \
+    -o$SOURCE/build/linux/bin/$PROGRAM-linux-amd64.bin \
     -static
+
+CC=$LINACC $LUA $LUASTATIC $SOURCE/main.lua $SOURCE/ext/*.lua $SOURCE/build/linux-arm32/include/liblua.a \
+    -I$SOURCE/build/linux-arm32/include/ \
+    -o$SOURCE/build/linux-arm32/bin/$PROGRAM-linux-arm32.bin \
+    -static \
+    -march=armv7-a
 
 CC=$WINCC $LUA $LUASTATIC $SOURCE/main.lua $SOURCE/ext/*.lua $SOURCE/build/windows/include/liblua.a \
     -I$SOURCE/build/windows/include/ \
-    -o$SOURCE/build/windows/bin/$PROGRAM.exe \
+    -o$SOURCE/build/windows/bin/$PROGRAM-windows-amd64.exe \
     -static
 
 rm *.luastatic.c
