@@ -21,16 +21,12 @@ jobs:
                 platform: x64
 
             - name: Install Arm GNU Toolchain
-              # uses: carlosperate/arm-none-eabi-gcc-action@v1
               run: sudo apt install gcc-arm-linux-gnueabi -y
 
             - name: Setup Fish Shell
               uses: fish-actions/install-fish@v1.1.0
               
             - name: Setup Lua Runtime
-              # uses: leafo/gh-actions-lua@v10
-              # with:
-              #  luaVersion: "5.1.5"
               run: sudo apt install lua5.1 -y
 
             - name: Generate Release Notes
@@ -53,4 +49,5 @@ jobs:
                   body_path: RELEASE-NOTES.md
                   files: |
                       build/linux/bin/*.bin
+                      build/linux-arm32/*.bin
                       build/windows/bin/*.exe
