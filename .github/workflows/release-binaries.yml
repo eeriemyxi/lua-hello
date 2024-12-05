@@ -50,7 +50,7 @@ jobs:
 
             - name: Build Binaries
               run: |
-                export PATH=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64:$PATH
+                export PATH=$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH
                 chmod +x build.fish && ./build.fish
               env:
                 ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
