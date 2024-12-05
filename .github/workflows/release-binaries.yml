@@ -48,5 +48,5 @@ jobs:
                   body_path: RELEASE-NOTES.md
                   files: |
                       build/linux/bin/*.bin
-                      build/linux-arm32/*.bin
+                      build/linux-arm32/bin/*.bin
                       build/windows/bin/*.exe
