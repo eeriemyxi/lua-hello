@@ -4,11 +4,11 @@ self-contained Lua script AMD64 binaries for Linux and Windows. Also ARM32
 and ARM64 binaries for Linux. ARM64 Linux builds for Android
 (e.g., Termux) is also supported. 
 
-[`main.lua`](main.lua) contains the source code, [`build.fish`](build.fish) is a
-Fish shell script for building the binaries. [`ext/`](`ext/`) contains external
-modules that are embedded into the binary. The script assumes you have GCC,
-Mingw 64-bit, GCC ARM, and Android NDK compiler toolchain installed. The rest it will figure
-out on its own.
+[`main.lua`](main.lua) contains the source code, [`build.xsh`](build.xsh) is a
+[Xonsh](https://xon.sh/) shell script for building the binaries.
+[`ext/`](`ext/`) contains external modules that are embedded into the binary.
+The script assumes you have GCC, Mingw 64-bit, GCC ARM, and Android NDK compiler
+toolchain installed. The rest it will figure out on its own.
 
 > [!NOTE]
 > For Android NDK you should consider adding
