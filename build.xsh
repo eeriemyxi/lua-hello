@@ -24,11 +24,11 @@ Builder = (
     namedtuple('Builder', ['build_name', 'lua_dir', 'cc', 'platform', "suffix", "cflags"]))
 
 BUILD_PROCS = [
-    Builder("linux", "lualin", "gcc", "linux", "bin", ""),
-    Builder("linux-arm32", "lualina32", "arm-linux-gnueabi-gcc", "linux", "bin", "-march=armv7-a"),
-    Builder("linux-arm64", "lualina64", "aarch64-linux-gnu-gcc", "linux", "bin", ""),
-    Builder("linux-android-arm64", "lualinan64", "aarch64-linux-android35-clang", "linux", "bin", ""),
-    Builder("windows", "luawin", "x86_64-w64-mingw32-gcc", "mingw", "exe", ""),
+    Builder("linux", "lualin", "gcc", "linux", "bin", "-static"),
+    Builder("linux-arm32", "lualina32", "arm-linux-gnueabi-gcc", "linux", "bin", "-static"),
+    Builder("linux-arm64", "lualina64", "aarch64-linux-gnu-gcc", "linux", "bin", "-static"),
+    Builder("linux-android-arm64", "lualinan64", "aarch64-linux-android35-clang", "linux", "bin", "-static"),
+    Builder("windows", "luawin", "x86_64-w64-mingw32-gcc", "mingw", "exe", "-static"),
 ]
 
 if args.clean:
@@ -82,7 +82,6 @@ def build_program(build_name, cc, suffix, cflags=""):
         @(SOURCE)/build/@(build_name)/include/liblua.a \
         -I@(SOURCE)/build/@(build_name)/include/ \
         -o@(SOURCE)/build/@(build_name)/bin/@(PROGRAM)-@(build_name).@(suffix) \
-        -static \
         @(cflags)
 
 setup_luastatic()
