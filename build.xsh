@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-C', '--clean', action='store_true', help="Clean build artifacts")
 parser.add_argument('-c', '--continue', action='store_true', help="Don't exit after cleaning build artifacts.")
 parser.add_argument('-l', '--list', action='store_true', help="Render a list of builder indices.")
-parser.add_argument('-s', '--specify', help="Comma-separated list of builders indices to enable. Defaults to 'all'.", default="all")
+parser.add_argument('-s', '--specify', help="Comma-separated list of builder indices to enable. Defaults to 'all'.", default="all")
 args = parser.parse_args()
 
 Builder = (
