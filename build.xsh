@@ -18,6 +18,8 @@ CORES = $(nproc).strip()
 parser = argparse.ArgumentParser()
 parser.add_argument('-C', '--clean', action='store_true', help="Clean build artifacts")
 parser.add_argument('-c', '--continue', action='store_true', help="Don't exit after cleaning build artifacts.")
+parser.add_argument('-l', '--list', action='store_true', help="Render a list of builder indices.")
+parser.add_argument('-s', '--specify', help="Comma-separated list of builders indices to enable. Defaults to 'all'.", default="all")
 args = parser.parse_args()
 
 Builder = (
@@ -44,7 +46,12 @@ if args.clean:
     if not getattr(args, "continue"):
         exit(0)
 
-    
+if args.list:
+    for i, builder in enumerate(BUILD_PROCS):
+        print(i, "->", builder.build_name)
+
+    exit(0)
+
 def setup_build_dir(build_name, lua_dir):
     mkdir @(SOURCE)/build/lua/@(builder.lua_dir) -p
     mkdir @(SOURCE)/build/@(builder.build_name)/include -p
@@ -86,7 +93,13 @@ def build_program(build_name, cc, suffix, cflags=""):
 
 setup_luastatic()
 
-for builder in BUILD_PROCS:
+if args.specify == "all":
+    builders = BUILD_PROCS
+else:
+    builders = [BUILD_PROCS[int(i)] for i in args.specify.replace(" ",
+                                                                  "").strip().split(",")]
+
+for builder in builders:
     setup_build_dir(builder.build_name, builder.lua_dir)
     setup_lua_src(builder.lua_dir)
     build_lua(builder.build_name, builder.lua_dir, builder.platform, builder.cc)
